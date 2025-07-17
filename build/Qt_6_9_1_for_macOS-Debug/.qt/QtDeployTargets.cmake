@@ -1,0 +1,2 @@
+set(__QT_DEPLOY_TARGET_Rocket_Trajecotory_GUI_FILE /Users/brightongannaway/Documents/CAEP/Rocket_Trajecotory_GUI/build/Qt_6_9_1_for_macOS-Debug/Rocket_Trajecotory_GUI.app/Contents/MacOS/Rocket_Trajecotory_GUI)
+set(__QT_DEPLOY_TARGET_Rocket_Trajecotory_GUI_TYPE EXECUTABLE)

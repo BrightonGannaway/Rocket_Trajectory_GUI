@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
+#include "Display_Calculations.h"
 
 #include "ConcreteBuilderRocket.cpp"
 
@@ -36,10 +37,10 @@ MainWindow::MainWindow(QWidget *parent)
     chart->legend()->hide();
     chart->addSeries(series);
     chart->createDefaultAxes();
-    chart->axes(Qt::Vertical).first()->setRange(0, 1000); //TODO: Set dynamic range with minimum
-    chart->axes(Qt::Horizontal).first()->setRange(0, 2000); //TODO: Set dynamic range with minimum
-    chart->setAnimationOptions(QChart::SeriesAnimations);
-    chart->setAnimationDuration(Constants::Runtime::RUNSECONDS * 1000);
+    chart->axes(Qt::Vertical).first()->setRange(-10, 10); //TODO: Set dynamic range with minimum
+    chart->axes(Qt::Horizontal).first()->setRange(-10, 10); //TODO: Set dynamic range with minimum
+    // chart->setAnimationOptions(QChart::SeriesAnimations);
+    // chart->setAnimationDuration(Constants::Runtime::RUNSECONDS * 1000);
     chart->setVisible(true);
     chart->show();
 
@@ -53,6 +54,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     //button configuring
     QVBoxLayout *verticlWidgetSidePanelLayout = new QVBoxLayout();
+    QVBoxLayout *verticalWidgetGraphAndInfoLayout = new QVBoxLayout();
+    QHBoxLayout *horizontalWidgetInfoLayout = new QHBoxLayout();
+    QVBoxLayout *verticalWidgetInfoLayout = new QVBoxLayout();
     QScrollArea *scrollArea = new QScrollArea();
 
     //adding a simple input field for testing
@@ -83,7 +87,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(DragcoefficientInputField, &QLineEdit::textEdited, this, &MainWindow::build_Cd);
 
     //combo box for display options
-    QComboBox* displayOptions = new QComboBox();
+    displayOptions = new QComboBox();
+    for (const auto& pair : Constants::Display::GRAPHOPTIONS) {
+        displayOptions->addItem(QString::fromStdString(pair.first));
+    }
 
     buildRocketBtn = new QPushButton("Build Rocket");
     connect(buildRocketBtn, &QPushButton::clicked, this, &MainWindow::buildRocket);
@@ -91,13 +98,27 @@ MainWindow::MainWindow(QWidget *parent)
     launchRocketBtn->setEnabled(false);
     connect(launchRocketBtn, &QPushButton::clicked, this, &MainWindow::launchRocket);
 
+    verticlWidgetSidePanelLayout->addWidget(displayOptions);
     verticlWidgetSidePanelLayout->addWidget(buildRocketBtn);
     verticlWidgetSidePanelLayout->addWidget(launchRocketBtn);
 
+    heightField = new QLabel("Y-Axis: UND");
+    distanceField = new QLabel("X-Axis: UND");
+    heightField->setAlignment(Qt::AlignmentFlag::AlignVCenter);
+    distanceField->setAlignment(Qt::AlignmentFlag::AlignVCenter);
+    verticalWidgetInfoLayout->addWidget(heightField);
+    verticalWidgetInfoLayout->addWidget(distanceField);
+
+    horizontalWidgetInfoLayout->addLayout(verticalWidgetInfoLayout);
+    verticalWidgetGraphAndInfoLayout->addWidget(chartView);
+    verticalWidgetGraphAndInfoLayout->addLayout(horizontalWidgetInfoLayout);
+
+
     verticlWidgetSidePanelLayout->addStretch();
     scrollArea->setLayout(verticlWidgetSidePanelLayout);
-    mainLayout->addWidget(scrollArea);
-    mainLayout->addWidget(chartView, 3);
+
+    mainLayout->addWidget(scrollArea, 1);
+    mainLayout->addLayout(verticalWidgetGraphAndInfoLayout, 3);
 
 
 
@@ -113,6 +134,7 @@ void MainWindow::addPoint(qreal x, qreal y) {
     series->append(x, y);
 }
 
+//convert 2d double vector to QPointF double QList and add to series
 void MainWindow::addPointVectort2dDouble(std::vector<std::vector<double>> &points) {
 
     QList<QPointF> Qpoints;
@@ -131,15 +153,57 @@ void MainWindow::updateChart() {
     chart->update();
 }
 
+void MainWindow::updateChart(std::vector<std::vector<double>> graph) {
+
+    const int buffer = 100;
+
+    double x_max = Display_Calculations::find_Graph_Max_Length(graph);
+    double x_min =  Display_Calculations::find_Graph_Min_Length(graph);
+    double y_max = Display_Calculations::find_Graph_Max_Height(graph);
+    double y_min = Display_Calculations::find_Graph_Min_Height(graph);
+    chart->axes(Qt::Vertical).first()->setRange(std::min(0, static_cast<int>(y_min)), std::max(10, static_cast<int>(y_max) + buffer)); //TODO: Set dynamic range with minimum
+    chart->axes(Qt::Horizontal).first()->setRange(std::min(0, static_cast<int>(x_min)), std::max(10,  static_cast<int>(x_max) + buffer)); //TODO: Set dynamic range with minimum
+
+    const std::string setting = displayOptions->currentText().toStdString();
+    Constants::Display::GraphTypes graphtype = Constants::Display::GRAPHOPTIONS.count(setting) ? Constants::Display::GRAPHOPTIONS.at(setting) : Constants::Display::UU;
+
+    std::string unitPostFix_X;
+    std::string unitPostfix_y;
+
+    switch (graphtype) {
+    case Constants::Display::XY:
+        unitPostFix_X = "m";
+        unitPostfix_y = "m";
+        break;
+    case Constants::Display::TY:
+        unitPostFix_X = "sec";
+        unitPostfix_y = "m (height)";
+        break;
+    case Constants::Display::TX:
+        unitPostFix_X = "sec";
+        unitPostfix_y = "m (distance)";
+        break;
+    case Constants::Display::TA:
+        unitPostFix_X = "sec";
+        unitPostfix_y = "m/s^2";
+        break;
+    default:
+        break;
+    }
+
+    heightField->setText(QString::fromStdString(Constants::Display::heightDisplayPrefix) + QString::number(y_max) + QString::fromStdString(unitPostfix_y));
+    distanceField->setText(QString::fromStdString(Constants::Display::distanceDisplayPrefix) + QString::number(x_max) + QString::fromStdString(unitPostFix_X));
+
+    chart->update();
+}
+
 void MainWindow::clearChart() {
     series->clear();
 }
 
-
-
-void MainWindow::displayNewInputField(QLineEdit* inputField, QString placeHolderText, QString titleText, QVBoxLayout* layout) {
+void MainWindow::displayNewInputField(QLineEdit* inputField, QString placeHolderText, QString titleText, QVBoxLayout* layout ) {
     inputField->setPlaceholderText(placeHolderText);
-    inputField->setValidator(new QDoubleValidator(-std::numeric_limits<double>::infinity(), std::numeric_limits<double>::infinity(), 15, this));
+    inputField->setValidator(new QDoubleValidator(0, std::numeric_limits<double>::infinity(), 15, this));
     layout->addWidget(new QLabel(titleText));
     layout->addWidget(inputField);
 }
@@ -148,9 +212,23 @@ void MainWindow::build_v (QString v) {
     builder->SetV(v.toDouble());
 };
 void MainWindow::build_Mf (QString Mf) {
+
     builder->SetMf(Mf.toDouble());
+
+    //ensure that fuel mass does not exceed the full mass
+    if (fuelMassInputField->text().toDouble() > Mf.toDouble()) {
+        fuelMassInputField->setText(QString::fromStdString(Mf.toStdString()));
+        build_Mc(fuelMassInputField->text());
+    }
+    //set validator to upper limits of full mass
+    QDoubleValidator* vali = new QDoubleValidator(0, Mf.toDouble(), 15, fuelMassInputField);
+    vali->setTop(Mf.toDouble());
+    fuelMassInputField->setValidator(vali);
 };
 void MainWindow::build_Mc (QString Mc){
+    if (Mc.toDouble() > fullMassInputField->text().toDouble()) {
+        fuelMassInputField->setText(fullMassInputField->text());
+    }
     builder->SetMc(Mc.toDouble());
 };
 void MainWindow::build_mdot (QString mdot){
@@ -199,9 +277,11 @@ void MainWindow::buildRocket() {
 void MainWindow::launchRocket(bool refeul = true) { //refuel bool needed as rocket fuel does get depleted
 
     clearChart();
-    std::vector<std::vector<double>> points = SpacePort::launchRocketandPlotTrajectory();
+    std::string setting = displayOptions->currentText().toStdString();
+    SpacePort::reset_Launch();
+    std::vector<std::vector<double>> points = SpacePort::launchRocketandPlotTrajectory(setting);
     currentMatrixPoints = points;
     addPointVectort2dDouble(currentMatrixPoints);
-    updateChart();
+    updateChart(points);
 }
 

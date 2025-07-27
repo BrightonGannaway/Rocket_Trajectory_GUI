@@ -28,7 +28,11 @@ public:
     static void dockRocket(Rocket* r);
     static void addEnvironment(Environment* env);
 
-    static std::vector<std::vector<double>> launchRocketandPlotTrajectory();
+    static void refuel();
+    static void refuel(double fuel);
+    static void reset_Launch(bool resetPosition = true);
+
+    static std::vector<std::vector<double>> launchRocketandPlotTrajectory(std::string graphSetting);
     static void dismantleRocket(); //nulls rokcet pointer
     static void ruinEnvironment(); //nulls env pointer
 

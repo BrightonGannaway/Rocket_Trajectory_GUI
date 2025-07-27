@@ -19,7 +19,19 @@ void SpacePort::addEnvironment(Environment* e) {
     env = e;
 }
 
-std::vector<std::vector<double>> SpacePort::launchRocketandPlotTrajectory() {
+void SpacePort::refuel() {
+    rocket->refuel();
+}
+
+void SpacePort::refuel(double fuel) {
+    rocket->refuel(fuel);
+}
+
+void SpacePort::reset_Launch(bool resetPosition) {
+    rocket->reset_Launch(resetPosition);
+}
+
+std::vector<std::vector<double>> SpacePort::launchRocketandPlotTrajectory(std::string graphSetting = "distance-x / distance-y") {
 
 
     if (rocket == NULL || rocket == nullptr) {
@@ -33,7 +45,7 @@ std::vector<std::vector<double>> SpacePort::launchRocketandPlotTrajectory() {
         envWasNull = true;
     }
 
-    std::vector<std::vector<double>> points = rt->plot_trajectory_path(rocket, env, Constants::Runtime::RUNSECONDS);
+    std::vector<std::vector<double>> points = rt->plot_trajectory_path(rocket, env, Constants::Runtime::RUNSECONDS, graphSetting);
 
     if (envWasNull) {
         env = nullptr;

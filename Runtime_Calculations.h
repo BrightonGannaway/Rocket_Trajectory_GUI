@@ -2,6 +2,7 @@
 #define RUNTIME_CALC
 
 #include "Rocket.h"
+#include "Constants.h"
 #include <vector>
 
 class Runtime_Calculations
@@ -13,10 +14,8 @@ public:
     Runtime_Calculations(Environment env_sim);
     ~Runtime_Calculations();
 
-    //calculate the path trajectory provided a rocket
-    //T = total time the simulation is run, Ts = start time
-    std::vector<std::vector<double>> plot_trajectory_path(Rocket* rocket, Environment* env, double T, double Ts = 0, double g= 9.81, bool drag = true);
-
+    std::vector<std::vector<double>> plot_trajectory_path(Rocket* rocket, Environment* env, double T, std::string setting = "distance-x / distance-y", double Ts = 0, double g= 9.81, bool drag = true);
+    std::vector<double> display_trajectory_path_point(Rocket* rocket, double time, std::string setting = "distance-x / distance-y");
 
 };
 #endif

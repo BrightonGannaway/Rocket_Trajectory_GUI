@@ -57,6 +57,7 @@ public:
     }
     void SetMc(double Mc) const override {
         this->rocket->set_Current_Mass_Fuel(Mc);
+        this->rocket->set_Full_Fuel_Mass(Mc); // due to user building rocket -> fuel tank size is automatically set.
     }
     void SetU(double u) const override {
         this->rocket->set_Velocity(u);

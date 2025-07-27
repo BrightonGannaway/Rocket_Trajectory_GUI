@@ -453,6 +453,12 @@
 			null
 		],
 		[
+			"/Users/brightongannaway/Documents/CAEP/Rocket_Trajecotory_GUI/Display_Calculations.h",
+			"MU",
+			"EWIEGA46WW/moc_Display_Calculations.cpp",
+			null
+		],
+		[
 			"/Users/brightongannaway/Documents/CAEP/Rocket_Trajecotory_GUI/Engine.h",
 			"MU",
 			"EWIEGA46WW/moc_Engine.cpp",
@@ -569,6 +575,11 @@
 		],
 		[
 			"/Users/brightongannaway/Documents/CAEP/Rocket_Trajecotory_GUI/ConcreteBuilderRocket.cpp",
+			"MU",
+			null
+		],
+		[
+			"/Users/brightongannaway/Documents/CAEP/Rocket_Trajecotory_GUI/Display_Calculations.cpp",
 			"MU",
 			null
 		],

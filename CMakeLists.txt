@@ -38,6 +38,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ConcreteBuilderEnviroment.cpp
 
         SpacePort.h SpacePort.cpp
+        Display_Calculations.h Display_Calculations.cpp
 
     )
 # Define target properties for Android with Qt 6 as:

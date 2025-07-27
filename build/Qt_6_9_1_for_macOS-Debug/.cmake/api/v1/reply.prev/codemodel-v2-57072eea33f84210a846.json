@@ -1,0 +1,79 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-0c1d612085e52a1af262.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "Rocket_Trajecotory_GUI",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "Rocket_Trajecotory_GUI::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Rocket_Trajecotory_GUI-Debug-7e6db438fcaba5125a03.json",
+					"name" : "Rocket_Trajecotory_GUI",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "Rocket_Trajecotory_GUI_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Rocket_Trajecotory_GUI_autogen-Debug-d6204098a2f918ee8466.json",
+					"name" : "Rocket_Trajecotory_GUI_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "Rocket_Trajecotory_GUI_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Rocket_Trajecotory_GUI_autogen_timestamp_deps-Debug-244b559578e59f3eef9c.json",
+					"name" : "Rocket_Trajecotory_GUI_autogen_timestamp_deps",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/Users/brightongannaway/Documents/CAEP/Rocket_Trajecotory_GUI/build/Qt_6_9_1_for_macOS-Debug",
+		"source" : "/Users/brightongannaway/Documents/CAEP/Rocket_Trajecotory_GUI"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}

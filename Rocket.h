@@ -10,32 +10,33 @@
 
 class Rocket : public Engine, public Environment {
 
-private:
-    double M; //instantaneous mass
+private: //DV stands for dynamic value and needs to be reset either to a static full value or 0
+    double M; //instantaneous mass //DV
     double Mf; //full mass -> grams
     double Me; //empty mass -> grams
-    double Mc; //current mass of fuel -> grams
-    double u; //rocket velocity -> m/s
-    double du; //delta velocity -> m/s ***
+    double Mc; //current mass of fuel -> grams //DV
+    double Mfc; //full mass of fuel
+    double u; //rocket velocity -> m/s //DV
+    double du; //delta velocity -> m/s *** //DV
     double v; //exaust velocity -> m/s
     double Vi; //initial velocity
     double Vcout; //velocity at engine cut out
-    double Ve; //equivalent exchange velocity
+    double Ve; //equivalent exchange velocity //DV
     double dt; //thrust duration
     double s; // cross-sectional area
     double A; //exaust area
-    double p; //exaust pressure
-    double F; //Thrust
-    double a; //acceleration
+    double p; //exaust pressure //DV -> ignore for now
+    double F; //Thrust //DV
+    double a; //acceleration //DV
     double Cd; //drag coefficient (around 0.35-0.75 for model rocket)
-    double a_x; //instantanious acceleration x
-    double a_y; //instantanious acceleration y
-    double v_x; //velocity of x
-    double v_y; //velocity of y
+    double a_x; //instantanious acceleration x //DV
+    double a_y; //instantanious acceleration y //DV
+    double v_x; //velocity of x //DV
+    double v_y; //velocity of y //DV
     double mdot; //mass flow rate
     double theta_L; //Launch angle
-    double x; //horizontal position
-    double y; //vertical position
+    double x; //horizontal position //DV
+    double y; //vertical position //DV
 
     double Hmax; //max height
     bool include_Gravity;
@@ -87,6 +88,12 @@ public:
     double apply_Drag_X(double a_x);
     double apply_Drag_Y(double a_y);
     
+    //for multiple uses of the same rokcet we can ask for refuels.
+    void refuel();
+    void refuel(double fuel);
+    void reset_Launch(bool resetPosition = true);
+
+
     // Getters and setters in the order of private field declarations
 
     double get_Mass();
@@ -100,6 +107,9 @@ public:
 
     double get_Current_Mass_Fuel();
     void set_Current_Mass_Fuel(double currentMassFuel);
+
+    double get_Full_Fuel_Mass();
+    void set_Full_Fuel_Mass(double fullFuelMass);
 
     double get_Velocity();
     void set_Velocity(double velocity);
@@ -134,6 +144,7 @@ public:
     void set_Thrust(double thrust); // F
     
     double get_Acceleration();
+    double get_instantaneous_Acceleration(); //returns a value based off the a_x and a_y values for modified acceleration
     void set_Acceleration(double acceleration);
     
     double get_Drag_Coefficient();

@@ -11,6 +11,7 @@
 #include <vector>
 #include <map>
 #include <QString>
+#include <QComboBox>
 
 #include "SpacePort.h"
 
@@ -34,6 +35,7 @@ public:
     void addPoint(qreal x, qreal y);
     void addPointVectort2dDouble(std::vector<std::vector<double>> &points);
     void updateChart();
+    void updateChart(std::vector<std::vector<double>>);
     void clearChart();
     void displayNewInputField(QLineEdit* inputField, QString placeHolderText, QString titleText, QVBoxLayout* layout);
 
@@ -72,9 +74,17 @@ private:
     QLineEdit* crossSectionalArealaunchAngleInputField;
     QLineEdit* DragcoefficientInputField;
 
+    //output fields
+    QLabel* heightField;
+    QLabel* distanceField;
 
     //buttons
     QPushButton* buildRocketBtn;
     QPushButton* launchRocketBtn;
+
+    //other fields
+    QComboBox* displayOptions;
+
+
 };
 #endif // MAINWINDOW_H

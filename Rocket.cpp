@@ -186,6 +186,37 @@ double Rocket::calculate_Max_Height(double Vi, double dt, double a, double theta
 }
 
 //-----------------------------//
+//------- Reset Methods -------//
+//-----------------------------//
+
+void Rocket::refuel() {
+    this->Mc = Mfc;
+}
+void Rocket::refuel(double fuel) {
+    if (fuel + Mc > Mfc) {
+        this->Mc = Mfc;
+    } else {
+        this->Mc += fuel;
+    }
+}
+
+void Rocket::reset_Launch(bool resetPosition) {
+    set_Mass(Mf);
+    refuel();
+    set_Velocity(0);
+    set_Delta_Velocity(0);
+    set_Equivalent_Exchange_Velocity(0);
+    set_Instantaneous_Velocity_X(0);
+    set_Instantaneous_Velocity_Y(0);
+    set_Instantaneous_Acceleration_X(0);
+    set_Instantaneous_Acceleration_X(0);
+
+    if (resetPosition) {
+        set_Current_Position_X(0);
+        set_Current_Position_Y(0);
+    }
+}
+//-----------------------------//
 //--- Accessors and Setters ---//
 //-----------------------------//
 
@@ -211,6 +242,10 @@ void Rocket::set_Mass_Flow_Rate(double mdot) {
 
 void Rocket::set_Current_Mass_Fuel(double Mc) {
     this->Mc = Mc;
+}
+
+void Rocket::set_Full_Fuel_Mass(double Mfc) {
+    this->Mfc = Mfc;
 }
 
 void Rocket::set_Mass(double M) {
@@ -300,6 +335,10 @@ double Rocket::get_Acceleration() {
     return a;
 }
 
+double Rocket::get_instantaneous_Acceleration() {
+    return std::sqrt((std::pow(a_x, 2)) + (std::pow(a_y, 2))); //values here update over time more accurately than a.
+}
+
 double Rocket::get_Cross_Sectional_Area() {
     return s;
 }
@@ -334,6 +373,10 @@ void Rocket::set_Instantaneous_Acceleration_Y(double a_y) {
 
 double Rocket::get_Current_Mass_Fuel() {
     return Mc;
+}
+
+double Rocket::get_Full_Fuel_Mass() {
+    return Mfc;
 }
 
 double Rocket::get_Mass_Flow_Rate() {
